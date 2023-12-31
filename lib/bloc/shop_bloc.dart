@@ -9,9 +9,20 @@ class ShopBloc extends Bloc<ShopEvent, ShopState> {
   final HiveService<ShopModel> hiveService;
 
   ShopBloc(this.hiveService) : super(ShopInitial()) {
+    on<LoadItems>(_onLoadItems);
     on<AddItem>(_addShopItem);
     on<UpdateItem>(_updateShopItem);
     on<DeleteItem>(_deleteShopItem);
+  }
+
+  Future<void> _onLoadItems(LoadItems event, Emitter<ShopState> emit) async {
+    emit(ShopLoading());
+    try {
+      final items = await hiveService.getAllItems();
+      emit(ShopLoaded(items));
+    } catch (e) {
+      emit(ShopError('Öğeler yüklenirken bir hata oluştu'));
+    }
   }
 
   Future<void> _addShopItem(AddItem event, Emitter<ShopState> emit) async {

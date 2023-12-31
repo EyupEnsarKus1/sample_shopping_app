@@ -2,6 +2,8 @@ import '../model/shopping_model.dart';
 
 abstract class ShopEvent {}
 
+class LoadItems extends ShopEvent {}
+
 class AddItem extends ShopEvent {
   final ShopModel item;
   AddItem(this.item);

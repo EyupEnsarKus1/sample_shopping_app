@@ -15,7 +15,8 @@ class ShopListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Shopping List'),
+        title: Text('Alışveriş Listesi'),
+        centerTitle: true,
       ),
       body: BlocBuilder<ShopBloc, ShopState>(
         builder: (context, state) {
@@ -24,22 +25,27 @@ class ShopListPage extends StatelessWidget {
           } else if (state is ShopLoaded) {
             return ListView.builder(
               itemCount: state.items.length,
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               itemBuilder: (context, index) {
                 final item = state.items[index];
-                return ListTile(
-                  title: Text(item.title),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () => _showEditDialog(context, item),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () => context.read<ShopBloc>().add(DeleteItem(item)),
-                      ),
-                    ],
+                return Card(
+                  elevation: 4,
+                  margin: EdgeInsets.only(bottom: 16),
+                  child: ListTile(
+                    title: Text(item.title),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () => _showEditDialog(context, item),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () => context.read<ShopBloc>().add(DeleteItem(item)),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
@@ -47,7 +53,7 @@ class ShopListPage extends StatelessWidget {
           } else if (state is ShopError) {
             return Center(child: Text('Error: ${state.message}'));
           }
-          return Container(); // Empty container for initial or unknown states
+          return Container();
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -63,18 +69,18 @@ class ShopListPage extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text('Add Item'),
+          title: Text('Ürün Ekle'),
           content: TextField(
             controller: titleController,
-            decoration: InputDecoration(hintText: 'Item title'),
+            decoration: InputDecoration(hintText: 'Ürün Başlğı'),
           ),
           actions: <Widget>[
             ElevatedButton(
-              child: Text('Cancel'),
+              child: Text('İptal'),
               onPressed: () => Navigator.of(dialogContext).pop(),
             ),
             ElevatedButton(
-              child: Text('Save'),
+              child: Text('Kaydet'),
               onPressed: () {
                 final newItem = ShopModel(id: DateTime.now().toString(), title: titleController.text);
                 context.read<ShopBloc>().add(AddItem(newItem));
@@ -93,18 +99,18 @@ class ShopListPage extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text('Edit Item'),
+          title: Text('Ürünü Güncelle'),
           content: TextField(
             controller: titleController,
-            decoration: InputDecoration(hintText: 'Item title'),
+            decoration: InputDecoration(hintText: 'Ürün Başlığı'),
           ),
           actions: <Widget>[
             ElevatedButton(
-              child: Text('Cancel'),
+              child: Text('İptal'),
               onPressed: () => Navigator.of(dialogContext).pop(),
             ),
             ElevatedButton(
-              child: Text('Update'),
+              child: Text('Güncelle'),
               onPressed: () {
                 final updatedItem = ShopModel(id: item.id, title: titleController.text);
                 context.read<ShopBloc>().add(UpdateItem(updatedItem));

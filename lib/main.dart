@@ -5,6 +5,7 @@ import 'package:sample_shopping_app/service/hive_service.dart';
 import 'package:sample_shopping_app/shopping_list_page.dart';
 
 import 'bloc/shop_bloc.dart';
+import 'bloc/shop_event.dart';
 import 'model/shopping_model.dart';
 
 void main() async {
@@ -33,7 +34,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: BlocProvider<ShopBloc>(
-        create: (_) => ShopBloc(hiveService),
+        create: (context) {
+          final bloc = ShopBloc(hiveService);
+          bloc.add(LoadItems());
+          return bloc;
+        },
         child: ShopListPage(),
       ),
     );

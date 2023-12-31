@@ -19,6 +19,10 @@ class HiveService<T> {
     return _box;
   }
 
+  Future<List<T>> getAllItems() async {
+    return _box.values.toList();
+  }
+
   Future<void> addItemWithAutoIncrementKey(T item) async {
     await _box.add(item);
   }
